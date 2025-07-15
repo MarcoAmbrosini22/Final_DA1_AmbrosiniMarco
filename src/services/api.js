@@ -1,46 +1,27 @@
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// src/services/api.js
 
-// Configuración base de axios
-const API_BASE_URL = 'https://tu-backend.com/api'; // Cambiar por tu URL real
+const API_BASE_URL = 'http://localhost:3000';
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+export async function getExpenses() {
+  const res = await fetch(`${API_BASE_URL}/expenses`);
+  if (!res.ok) throw new Error('Error al obtener gastos');
+  return await res.json();
+}
 
-// Interceptor para añadir token a todas las peticiones
-api.interceptors.request.use(
-  async (config) => {
-    try {
-      const token = await AsyncStorage.getItem('authToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (error) {
-      console.error('Error al obtener token:', error);
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+export async function addExpense(expense) {
+  const res = await fetch(`${API_BASE_URL}/expenses`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(expense),
+  });
+  if (!res.ok) throw new Error('Error al agregar gasto');
+  return await res.json();
+}
 
-// Interceptor para manejar respuestas y errores
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      // Token expirado o inválido
-      await AsyncStorage.removeItem('authToken');
-      // Aquí podrías navegar al login o mostrar un mensaje
-    }
-    return Promise.reject(error);
-  }
-);
-
-export default api; 
+export async function deleteExpense(id) {
+  const res = await fetch(`${API_BASE_URL}/expenses/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error('Error al eliminar gasto');
+  return true;
+} 

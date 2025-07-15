@@ -1,0 +1,24 @@
+{
+  "expenses": [
+    {
+      "id": "1",
+      "concept": "Supermercado",
+      "amount": 12500
+    },
+    {
+      "id": "2",
+      "concept": "Transporte",
+      "amount": 980
+    },
+    {
+      "id": "1779",
+      "concept": "Cafe",
+      "amount": 450
+    },
+    {
+      "id": "d1aa",
+      "concept": "Cena",
+      "amount": 10000
+    }
+  ]
+}
